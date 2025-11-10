@@ -1,0 +1,150 @@
+{% extends 'rentals/base.html' %}
+
+{% block title %}Available Cars - Car Rental Service{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cars-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 2rem 0;
+    }
+    
+    .car-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+    }
+    
+    .car-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    }
+    
+    .car-image {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        color: white;
+    }
+    
+    .car-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .car-info {
+        padding: 1.5rem;
+    }
+    
+    .car-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+    
+    .car-details {
+        color: #666;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .car-price {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #667eea;
+        margin-bottom: 1rem;
+    }
+    
+    .car-price span {
+        font-size: 1rem;
+        color: #666;
+        font-weight: normal;
+    }
+    
+    .no-cars {
+        text-align: center;
+        padding: 3rem;
+        background: white;
+        border-radius: 10px;
+        margin: 2rem auto;
+        max-width: 600px;
+    }
+    
+    .no-cars h2 {
+        color: #667eea;
+        margin-bottom: 1rem;
+    }
+    
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 0;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .hero-section h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .hero-section p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <h1>Find Your Perfect Car</h1>
+        <p>Browse our selection of premium vehicles available for rent</p>
+    </div>
+</div>
+
+<div class="container">
+    {% if cars %}
+    <div class="cars-grid">
+        {% for car in cars %}
+        <div class="car-card" onclick="window.location.href='{% url 'car_detail' car.id %}'">
+            <div class="car-image">
+                {% if car.image %}
+                <img src="{{ car.image.url }}" alt="{{ car.make }} {{ car.model }}">
+                {% else %}
+                🚗
+                {% endif %}
+            </div>
+            <div class="car-info">
+                <div class="car-title">{{ car.year }} {{ car.make }} {{ car.model }}</div>
+                <div class="car-details">
+                    <div>Color: {{ car.color }}</div>
+                </div>
+                <div class="car-price">
+                    ₱{{ car.price_per_day }}<span>/day</span>
+                </div>
+                <a href="{% url 'car_detail' car.id %}" class="btn">View Details</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-cars">
+        <h2>No Cars Available</h2>
+        <p>We're sorry, but there are currently no cars available for rent. Please check back later.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
